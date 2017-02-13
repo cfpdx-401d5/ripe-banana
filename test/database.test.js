@@ -1,11 +1,14 @@
-const chai = require('chai');
-const assert = chai.assert;
-const chaiHttp = require('chai-http');
+const assert = require('chai').assert;
+const Actor = require('../lib/models/actor-schema');
 const mongoose = require('mongoose');
-const app = require('../lib/app');
 
-chai.use(chaiHttp);
-const request = chai.request(app);
+mongoose.Promise = Promise;
 
-process.env.MONGODB_URI = 'mongodb://localhost:27017/ripeBananas-test';
-require('../lib/mongo-connection');
+describe.only('actor model', () => {
+    it('example data with all fields', () => {
+        return new Actor({ name: 'Vin Diesel', dob: '1967-07-18' })
+            .validate()
+            .then(actor => console.log('actor: ', actor))
+            .catch(err => { throw err; });
+    });
+});
