@@ -67,7 +67,7 @@ route | returns
 `GET /studios/:id` | { name, address, films: [ title ] }
 `GET /films` | [{ title, studio.name }]
 `GET /films/:id` | { title, studio.name, actors: [ name ] }
-`GET /actors` | { name, dob }
+`GET /actors` | [{ name, dob }]
 `GET /actors/:id` | { name, dob }
 
 #### POST/PATCH
