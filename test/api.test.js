@@ -61,24 +61,18 @@ describe('test data for project', () => {
                 });
         });
 
-
-
         it('POST new actor', () => {
             return saveResource(actorOne, '/actors')
                 .then(savedActor => {
-                    assert.deepEqual(savedActor.name, actorOne.name);
-                    assert.deepEqual(savedActor.dob, actorOne.dob);
                     assert.isOk(savedActor._id);
-                    assert.equal(savedActor.__v, '0');
+                    actorOne._id = savedActor._id;
+                    actorOne.__v = 0;
+                    assert.deepEqual(savedActor, actorOne);
                 });
         });
-
     });
 
-
     describe('studios API TEST', () => {
-
-        //before(() => mongoose.connection.dropDatabase());
 
         it('GET returns empty array of studios', () => {
             return request.get('/studios')
@@ -88,22 +82,25 @@ describe('test data for project', () => {
                 });
         });
 
-
-
         it('POST new studio', () => {
             return saveResource(studioOne, '/studios')
                 .then(savedStudio => {
-                    assert.deepEqual(savedStudio.name, studioOne.name);
                     assert.isOk(savedStudio._id);
-                    assert.deepEqual(savedStudio.address, studioOne.address);
+                    studioOne._id = savedStudio._id;
+                    studioOne.__v = 0;
+                    assert.deepEqual(savedStudio, studioOne);
                 });
         });
+    });
 
-        // it('GET studio by id', () => {
+    describe('API for films', () => {
+        it('get films', () => {
 
-        // })
+        });
 
+        it('post films', () => {
 
+        });
     });
 
 });
