@@ -1,14 +1,14 @@
 const assert = require('chai').assert;
-const Actor = require('../lib/models/actor-schema');
+const Film = require('../../lib/models/film-schema');
 const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
 describe.only('actor model', () => {
     it('example data with all fields', () => {
-        return new Actor({ name: 'Vin Diesel', dob: '1967-07-18' })
+        return new Film({ name: 'Riddick', studio: 'Universal', released: '2013-09-04', actor: ['Vin Diesel'] })
             .validate()
-            .then(actor => console.log('actor: ', actor))
+            .then(film => console.log('actor: ', film))
             .catch(err => { throw err; });
     });
 });
