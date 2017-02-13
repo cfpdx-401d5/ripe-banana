@@ -22,8 +22,19 @@ describe('actors API TEST', () => {
             })
     });
 
-    // it('POST all actors', () => {
-       
+    let actorOne = {
+        name: "Bradley Cooper",
+        dob: "1976-12-03"
+    }
+
+    // it('POST new actor', () => {
+    //     return request.post('/actors')
+    //         .send(actorOne)
+    //         .then(res => {console.log('res.body:', res.body); res.body})
+    //         .then(savedActor => {
+    //             console.log(savedActor);
+    //             assert.deepEqual(savedActor, actorOne)
+    //         })
     // });
 
     // it('GET one actor by id', () => {
