@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
-describe('actor model', () => {
+describe.skip('actor model', () => {
     it('validation fails with no name', () => {
         return new Actor({ dob: '1967-07-18' })
             .validate()

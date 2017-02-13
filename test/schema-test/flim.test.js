@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
-describe.only('actor model', () => {
+describe.skip('actor model', () => {
     it('validation fails with no title', () => {
         return new Film({ dob: '1967-07-18' })
             .validate()
