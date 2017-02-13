@@ -5,10 +5,12 @@ const mongoose = require('mongoose');
 mongoose.Promise = Promise;
 
 describe.only('actor model', () => {
-    it('example data with all fields', () => {
-        return new Film({ name: 'Riddick', studio: 'Universal', released: '2013-09-04', actor: ['Vin Diesel'] })
+    it('validation fails with no title', () => {
+        return new Film({ dob: '1967-07-18' })
             .validate()
-            .then(film => console.log('actor: ', film))
-            .catch(err => { throw err; });
+            .then(
+                () => { throw new Error('You need a name for this record.'); },
+                err => assert.isNotNull(err)
+            );
     });
 });
