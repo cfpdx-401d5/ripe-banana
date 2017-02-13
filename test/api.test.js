@@ -97,7 +97,10 @@ describe('studios API TEST', () => {
     });
 
     // it('GET studio by id', () => {
-
+    //     return request.get(`/studios/${studioOne._id}`)
+    //         .then(res => {
+    //             assert.deepEqual(res._id, studioOne._id)
+    //         })
     // })
 
   
