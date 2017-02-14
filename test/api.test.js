@@ -109,6 +109,20 @@ describe('test data for project', () => {
                 assert.deepEqual(actors, [actorOne, actorTwo, actorThree]);
             });
         });
+
+        it('updates saved actor with PUT', () => {
+            actorOne.name = 'Brad Cooper';
+            return request.put(`/actors/${actorOne._id}`)
+                .send(actorOne)
+                .then(res => {
+                    assert.deepEqual(res.body, actorOne)
+                    return request.get(`/actors/${actorOne._id}`);
+                })
+                .then(res => {
+                    assert.deepEqual(res.body.name, actorOne.name);
+            });
+        });
+
     });
 
     describe('studios API TEST', () => {
@@ -153,6 +167,7 @@ describe('test data for project', () => {
                 assert.deepEqual(studios, [studioOne, studioTwo, studioThree]);
             });
         });
+
     });
 
     describe('API for films', () => {
@@ -205,5 +220,44 @@ describe('test data for project', () => {
                     assert.deepEqual(res.body[0].actors, filmOne.actors);
                 });
         });
+    });
+
+    describe('tests delete', () => {
+        let actorFour = {
+            name: 'Meryl Streep',
+            dob: '1949-06-22T00:00:00.000Z'
+        };
+
+        it('deletes saved actor not in Film', () => {
+
+            return saveResource(actorFour, '/actors')
+                .then(savedActor => {
+                    actorFour = savedActor
+                })
+                .then(() => {
+                    return request.del(`/actors/${actorFour._id}`)
+                })
+                .then(res => {
+                    assert.isTrue(res.body.deleted)
+                })
+        });
+
+        // it('tries to delete actor in Film', () => {
+        //     return request.del(`/actors/${actorOne._id}`)
+        //         .then(res => {
+        //             console.log('res:',res.status)
+        //             console.log('resBODY', res.body)
+        //             //assert.equal(res.body.error, "CANNOT DELETED ACTOR IN FILM")
+        //         })
+        // });
+
+        // it('tries to delete actor with wrong id', () => {
+        //     return request.del(`/actors/58a36a64c9fd0e3630d3e3c1`)
+        //         .then(res => {
+        //             console.log('res:',res.status)
+        //             console.log('resBODY', res.body)
+        //             //assert.equal(res.body.error, "CANNOT DELETED ACTOR IN FILM")
+        //         })
+        // });
     });
 });
