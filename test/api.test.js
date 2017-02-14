@@ -125,7 +125,7 @@ describe('test data for project', () => {
             return request.put(`/actors/${actorOne._id}`)
                 .send(actorOne)
                 .then(res => {
-                    assert.deepEqual(res.body, actorOne)
+                    assert.deepEqual(res.body, actorOne);
                     return request.get(`/actors/${actorOne._id}`);
                 })
                 .then(res => {
@@ -270,32 +270,43 @@ describe('test data for project', () => {
 
             return saveResource(actorFour, '/actors')
                 .then(savedActor => {
-                    actorFour = savedActor
+                    actorFour = savedActor;
                 })
                 .then(() => {
-                    return request.del(`/actors/${actorFour._id}`)
+                    return request.del(`/actors/${actorFour._id}`);
                 })
                 .then(res => {
                     assert.isTrue(res.body.deleted)
                 })
         });
 
-        // it('tries to delete actor in Film', () => {
-        //     return request.del(`/actors/${actorOne._id}`)
-        //         .then(res => {
-        //             console.log('res:',res.status)
-        //             console.log('resBODY', res.body)
-        //             //assert.equal(res.body.error, "CANNOT DELETED ACTOR IN FILM")
-        //         })
-        // });
+        it('tries to delete actor in Film', () => {
+            return request.del(`/actors/${actorOne._id}`)
+                .then(
+                    () => { throw new Error('successful response not expected');},
+                    (res) => {
+                        assert.equal(res.status, 400);
+                        assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
+                    }
+    
+                )
+                // OTHER OPTION FOR HANDLING ERROR
+                // .catch((res) => {
+                //         assert.equal(res.status, 400);
+                //         assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
+                //     }
+                // )
+        });
 
-        // it('tries to delete actor with wrong id', () => {
-        //     return request.del(`/actors/58a36a64c9fd0e3630d3e3c1`)
-        //         .then(res => {
-        //             console.log('res:',res.status)
-        //             console.log('resBODY', res.body)
-        //             //assert.equal(res.body.error, "CANNOT DELETED ACTOR IN FILM")
-        //         })
-        // });
+        it('tries to delete actor with wrong id', () => {
+            return request.del(`/actors/58a36a64c9fd0e3630d3e3c1`)
+                .then(
+                    () => { throw new Error('successful response not expected');},
+                    res => {
+                        assert.equal(res.status, 404);
+                        assert.equal(res.response.body.error, `CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE`)
+                    }
+                )
+        });
     });
 });
