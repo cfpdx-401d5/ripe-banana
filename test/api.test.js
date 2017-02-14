@@ -142,7 +142,6 @@ describe('test data for project', () => {
             filmOne.studio = studioOne._id;
             filmOne.actors = [actorOne._id, actorThree._id, actorTwo._id];
 
-
             return saveResource(filmOne, '/films')
                 .then(savedFilm => {
                     assert.isOk(savedFilm._id);
@@ -150,6 +149,14 @@ describe('test data for project', () => {
                     filmOne.__v = 0;
                     assert.equal(savedFilm.studio, filmOne.studio);
                     assert.deepEqual(savedFilm.actors, filmOne.actors);
+                });
+        });
+
+        it('get film by id', () => {
+            return request.get(`/films/${filmOne._id}`)
+                .then(res => {
+                    assert.equal(res.body[0].studio, filmOne.studio);
+                    assert.deepEqual(res.body[0].actors, filmOne.actors);
                 });
         });
     });
