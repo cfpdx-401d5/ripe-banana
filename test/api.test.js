@@ -214,6 +214,28 @@ describe('test data for project', () => {
                 });
         });
 
+        it.skip('update a film - add a review', () => {
+            const newReview = { rating: 2, review: 'I have seen better' };
+            const url = `/flims/${filmTwo._id}`;
+
+            return request.post(url)
+                .send(newReview)
+                .then(res => {
+                    assert.equal(res.body.review[2].rating, newReview.rating);
+                });
+        });
+
+        it('update a film - update a release date', () => {
+            filmTwo.released = '2012-02-26T00:00:00.000Z';
+
+            return request.put(`/films/${filmTwo._id}`)
+                .send(filmTwo)
+                .then(res => {
+                    assert.equal(res.body.released, filmTwo.released);
+                    return request.get(`/films/${filmTwo._id}`);
+                });
+        });
+
         it('DELETE a film by id', () => {
             return request.del(`/films/${filmThree._id}`)
                 .then(res => {
