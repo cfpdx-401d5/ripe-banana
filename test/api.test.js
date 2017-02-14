@@ -15,7 +15,17 @@ describe('test data for project', () => {
 
     let actorOne = {
         name: 'Bradley Cooper',
-        dob: '1976-12-03T00:00:00.000Z'
+        dob: '1975-01-05T00:00:00.000Z'
+    };
+
+    let actorTwo = {
+        name: 'Lupita Nyong\'o',
+        dob: '1983-03-01T00:00:00.000Z'
+    };
+
+    let actorThree = {
+        name: 'Meryl Streep',
+        dob: '1949-06-22T00:00:00.000Z'
     };
 
     let studioOne = {
@@ -61,23 +71,41 @@ describe('test data for project', () => {
                 });
         });
 
-
-
         it('POST new actor', () => {
             return saveResource(actorOne, '/actors')
                 .then(savedActor => {
-                    assert.deepEqual(savedActor.name, actorOne.name);
-                    assert.deepEqual(savedActor.dob, actorOne.dob);
                     assert.isOk(savedActor._id);
-                    assert.equal(savedActor.__v, '0');
+                    actorOne._id = savedActor._id;
+                    actorOne.__v = 0;
+                    assert.deepEqual(savedActor, actorOne);
                 });
         });
 
+        it('GET actor by id', () => {
+            return request.get(`/actors/${actorOne._id}`)
+                .then(res => {
+                    assert.deepEqual(res.body, actorOne);
+                });
+        });
+
+        it('GET all actors', () => {
+            return Promise.all([
+                saveResource(actorTwo, '/actors'),
+                saveResource(actorThree, '/actors')
+            ])
+            .then(savedActors => {
+                actorTwo = savedActors[0];
+                actorThree = savedActors[1]
+            })
+            .then(() => request.get('/actors'))
+            .then(res => {
+                const actors = res.body;
+                assert.deepEqual(actors, [actorOne, actorTwo, actorThree]);
+            });
+        });
     });
 
     describe('studios API TEST', () => {
-
-        //before(() => mongoose.connection.dropDatabase());
 
         it('GET returns empty array of studios', () => {
             return request.get('/studios')
@@ -87,24 +115,48 @@ describe('test data for project', () => {
                 });
         });
 
-
-
         it('POST new studio', () => {
             return saveResource(studioOne, '/studios')
                 .then(savedStudio => {
-                    assert.deepEqual(savedStudio.name, studioOne.name);
                     assert.isOk(savedStudio._id);
-                    assert.deepEqual(savedStudio.address, studioOne.address);
+                    studioOne._id = savedStudio._id;
+                    studioOne.__v = 0;
+                    assert.deepEqual(savedStudio, studioOne);
                 });
         });
 
-        // it('GET studio by id', () => {
-        //     return request.get(`/studios/${studioOne._id}`)
-        //         .then(res => {
-        //             assert.deepEqual(res._id, studioOne._id)
-        //         })
-        // })
+        it('GET studio by id', () => {
+            return request.get(`/studios/${studioOne._id}`)
+                .then(res => {
+                    assert.deepEqual(res.body, studioOne);
+                });
+        });
+
+        it('GET all studios', () => {
+            return Promise.all([
+                saveResource(studioTwo, '/studios'),
+                saveResource(studioThree, '/studios')
+            ])
+            .then(savedStudios => {
+                studioTwo = savedStudios[0],
+                studioThree = savedStudios[1]
+            })
+            .then(() => request.get('/studios'))
+            .then(res => {
+                const studios = res.body;
+                assert.deepEqual(studios, [studioOne, studioTwo, studioThree]);
+            });
+        });
+
+    // describe('API for films', () => {
+    //     it('get films', () => {
+
+    //     });
+
+    //     it('post films', () => {
+
+    //     });
+    // });
 
     });
-
 });
