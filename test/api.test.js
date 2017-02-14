@@ -214,14 +214,14 @@ describe('test data for project', () => {
                 });
         });
 
-        it.skip('update a film - add a review', () => {
+        it('update a film - add a review', () => {
             const newReview = { rating: 2, review: 'I have seen better' };
-            const url = `/flims/${filmTwo._id}`;
 
-            return request.post(url)
-                .send(newReview)
+            return request.post(`/films/${filmTwo._id}/reviews`)
+                .send(JSON.stringify(newReview))
                 .then(res => {
-                    assert.equal(res.body.review[2].rating, newReview.rating);
+                    console.log('res.body: ', res.body);
+                    assert.equal(res.body.reviews[2].rating, newReview.rating);
                 });
         });
 
