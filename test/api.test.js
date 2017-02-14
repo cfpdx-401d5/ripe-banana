@@ -61,6 +61,18 @@ describe('test data for project', () => {
         reviews: [{ rating: 3, review: 'It was the most boring movie.' }, { rating: 5, review: 'it was great!' }]
     };
 
+    let filmTwo = {
+        title: 'Your Film',
+        released: '2012-02-28T00:00:00.000Z',
+        reviews: [{ rating: 4, review: 'Best film I have seen this year!' }, { rating: 3, review: 'I hope the squel is better.' }]
+    };
+
+    let filmThree = {
+        title: 'Their Film',
+        released: '2008-10-15T00:00:00.000Z',
+        reviews: [{ rating: 2, review: 'This stinks!' }, { rating: 1, review: 'I could have done better.' }]
+    };
+
     function saveResource(resource, route) {
         return request.post(route)
             .send(resource)
@@ -95,19 +107,17 @@ describe('test data for project', () => {
         });
 
         it('GET all actors', () => {
-            return Promise.all([
-                saveResource(actorTwo, '/actors'),
-                saveResource(actorThree, '/actors')
-            ])
-            .then(savedActors => {
-                actorTwo = savedActors[0];
-                actorThree = savedActors[1]
-            })
-            .then(() => request.get('/actors'))
-            .then(res => {
-                const actors = res.body;
-                assert.deepEqual(actors, [actorOne, actorTwo, actorThree]);
-            });
+            return Promise
+                .all([saveResource(actorTwo, '/actors'), saveResource(actorThree, '/actors')])
+                .then(savedActors => {
+                    actorTwo = savedActors[0];
+                    actorThree = savedActors[1];
+                })
+                .then(() => request.get('/actors'))
+                .then(res => {
+                    const actors = res.body;
+                    assert.deepEqual(actors, [actorOne, actorTwo, actorThree]);
+                });
         });
     });
 
@@ -139,42 +149,21 @@ describe('test data for project', () => {
         });
 
         it('GET all studios', () => {
-            return Promise.all([
-                saveResource(studioTwo, '/studios'),
-                saveResource(studioThree, '/studios')
-            ])
-            .then(savedStudios => {
-                studioTwo = savedStudios[0],
-                studioThree = savedStudios[1]
-            })
-            .then(() => request.get('/studios'))
-            .then(res => {
-                const studios = res.body;
-                assert.deepEqual(studios, [studioOne, studioTwo, studioThree]);
-            });
+            return Promise
+                .all([saveResource(studioTwo, '/studios'), saveResource(studioThree, '/studios')])
+                .then(savedStudios => {
+                    studioTwo = savedStudios[0],
+                        studioThree = savedStudios[1];
+                })
+                .then(() => request.get('/studios'))
+                .then(res => {
+                    const studios = res.body;
+                    assert.deepEqual(studios, [studioOne, studioTwo, studioThree]);
+                });
         });
     });
 
     describe('API for films', () => {
-        // it('more test actors actor', () => {
-        //     return saveResource(actorTwo, '/actors')
-        //         .then(savedActor => {
-        //             assert.isOk(savedActor._id);
-        //             actorTwo._id = savedActor._id;
-        //             actorTwo.__v = 0;
-        //             assert.deepEqual(savedActor, actorTwo);
-        //         });
-        // });
-
-        // it('and more', () => {
-        //     return saveResource(actorThree, '/actors')
-        //         .then(savedActor => {
-        //             assert.isOk(savedActor._id);
-        //             actorThree._id = savedActor._id;
-        //             actorThree.__v = 0;
-        //             assert.deepEqual(savedActor, actorThree);
-        //         });
-        // });
 
         it('get films', () => {
             return request.get('/films')
@@ -201,9 +190,36 @@ describe('test data for project', () => {
         it('get film by id', () => {
             return request.get(`/films/${filmOne._id}`)
                 .then(res => {
-                    assert.equal(res.body[0].studio, filmOne.studio);
+                    assert.equal(res.body[0].studio._id, filmOne.studio);
                     assert.deepEqual(res.body[0].actors, filmOne.actors);
                 });
         });
+
+        it('GET all studios', () => {
+            filmTwo.studio = studioTwo._id;
+            filmTwo.actors = [actorOne._id, actorThree._id, actorTwo._id];
+            filmThree.studio = studioThree._id;
+            filmThree.actors = [actorOne._id, actorThree._id, actorTwo._id];
+
+            return Promise
+                .all([saveResource(filmTwo, '/films'), saveResource(filmThree, '/films')])
+                .then(savedFilms => {
+                    filmTwo = savedFilms[0],
+                        filmThree = savedFilms[1];
+                })
+                .then(() => request.get('/films'))
+                .then(res => {
+                    assert.equal(res.body[0].studio, filmOne.studio);
+                    assert.deepEqual(res.body[1].actors, filmTwo.actors);
+                });
+        });
+
+        it('DELETE a film by id', () => {
+            return request.del(`/films/${filmThree._id}`)
+                .then(res => {
+                    assert.isTrue(res.body.deleted);
+                });
+        });
+
     });
 });
