@@ -130,7 +130,7 @@ describe('test data for project', () => {
                 })
                 .then(res => {
                     assert.deepEqual(res.body.name, actorOne.name);
-            });
+                });
         });
 
     });
@@ -278,37 +278,37 @@ describe('test data for project', () => {
                     return request.del(`/actors/${actorFour._id}`);
                 })
                 .then(res => {
-                    assert.isTrue(res.body.deleted)
-                })
+                    assert.isTrue(res.body.deleted);
+                });
         });
 
         it('tries to delete actor in Film', () => {
             return request.del(`/actors/${actorOne._id}`)
                 .then(
-                    () => { throw new Error('successful response not expected');},
+                    () => { throw new Error('successful response not expected'); },
                     (res) => {
                         assert.equal(res.status, 400);
-                        assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
+                        assert.equal(res.response.body.error, 'CANNOT REMOVE ACTOR IN FILM');
                     }
-    
-                )
-                // OTHER OPTION FOR HANDLING ERROR
-                // .catch((res) => {
-                //         assert.equal(res.status, 400);
-                //         assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
-                //     }
-                // )
+
+                );
+            // OTHER OPTION FOR HANDLING ERROR
+            // .catch((res) => {
+            //         assert.equal(res.status, 400);
+            //         assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
+            //     }
+            // )
         });
 
         it('tries to delete actor with wrong id', () => {
-            return request.del(`/actors/58a36a64c9fd0e3630d3e3c1`)
+            return request.del('/actors/58a36a64c9fd0e3630d3e3c1')
                 .then(
-                    () => { throw new Error('successful response not expected');},
+                    () => { throw new Error('successful response not expected'); },
                     res => {
                         assert.equal(res.status, 404);
-                        assert.equal(res.response.body.error, `CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE`)
+                        assert.equal(res.response.body.error, 'CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE');
                     }
-                )
+                );
         });
     });
 });
