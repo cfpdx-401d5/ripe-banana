@@ -198,6 +198,7 @@ describe('test data for project', () => {
 
         it('post films', () => {
             filmOne.studio = studioOne._id;
+
             filmOne.actors = [actorOne._id, actorThree._id, actorTwo._id];
 
             return saveResource(filmOne, '/films')
@@ -243,7 +244,6 @@ describe('test data for project', () => {
             return request.post(`/films/${filmTwo._id}/reviews`)
                 .send(JSON.stringify(newReview))
                 .then(res => {
-                    console.log('res.body: ', res.body);
                     assert.equal(res.body.reviews[2].rating, newReview.rating);
                 });
         });
@@ -336,6 +336,28 @@ describe('test data for project', () => {
                 }).then(res => {
                     assert.isTrue(res.body.deleted)
                 })
+        });
+
+        it.skip('throws err if tries to delete studio with wrong id', () => {
+            return request.del(`/studios/58a3b4c8cc438c5441b0f173`)
+                .then(
+                    () => { throw new Error('successful response not expected')},
+                    res => {
+                        assert.equal(res.status, 404);
+                        assert.equal(res.response.body.error, 'CANNOT FIND ID 58a3b4c8cc438c5441b0f173 TO REMOVE');
+                    }
+                )
+        });
+
+        it('throws err if tries to delete studio in film', () => {
+            return request.del(`/studios/${studioOne._id}`)
+                .then(
+                    () => { throw new Error('successful response not expected')},
+                    res => {
+                        assert.equal(res.status, 400);
+                        assert.equal(res.response.body.error, 'CANNOT REMOVE STUDIO OF SAVED FILM');
+                    }
+                )
         });
     });
 });
