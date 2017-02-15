@@ -176,6 +176,14 @@ describe('test data for project', () => {
                 });
         });
 
+        it('updates a saved studio with PUT', () => {
+            studioOne.name = 'MPM Std';
+            return request.put(`/studios/${studioOne._id}`)
+                .send(studioOne)
+                .then(res => {
+                    assert.deepEqual(res.body, studioOne)
+                })
+        });
     });
 
     describe('API for films', () => {
@@ -307,6 +315,27 @@ describe('test data for project', () => {
                         assert.equal(res.response.body.error, `CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE`)
                     }
                 )
+        });
+
+        it('deletes studio not tied to film', () => {
+            let studioToDelete = {
+                name: 'Delete Studios',
+                address: {
+                    city: 'Houston',
+                    state: 'TX',
+                    country: 'USA'
+                }
+            };
+
+            return saveResource(studioToDelete, '/studios')
+                .then(savedStudio => {
+                    studioToDelete = savedStudio
+                })
+                .then(() => {
+                    return request.del(`/studios/${studioToDelete._id}`)
+                }).then(res => {
+                    assert.isTrue(res.body.deleted)
+                })
         });
     });
 });
