@@ -235,7 +235,6 @@ describe('test data for project', () => {
             return request.post(`/films/${filmTwo._id}/reviews`)
                 .send(JSON.stringify(newReview))
                 .then(res => {
-                    console.log('res.body: ', res.body);
                     assert.equal(res.body.reviews[2].rating, newReview.rating);
                 });
         });
