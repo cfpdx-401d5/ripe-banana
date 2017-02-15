@@ -80,7 +80,6 @@ describe('test data for project', () => {
     }
 
     describe('actors API TEST', () => {
-
         it('GET returns empty array of actors', () => {
             return request.get('/actors')
                 .then(req => req.body)
@@ -132,11 +131,9 @@ describe('test data for project', () => {
                     assert.deepEqual(res.body.name, actorOne.name);
                 });
         });
-
     });
 
     describe('studios API TEST', () => {
-
         it('GET returns empty array of studios', () => {
             return request.get('/studios')
                 .then(req => req.body)
@@ -175,11 +172,9 @@ describe('test data for project', () => {
                     assert.deepEqual(studios, [studioOne, studioTwo, studioThree]);
                 });
         });
-
     });
 
     describe('API for films', () => {
-
         it('get films', () => {
             return request.get('/films')
                 .then(req => req.body)
@@ -250,15 +245,23 @@ describe('test data for project', () => {
                 });
         });
 
-        it('update a flim - add an actor to an existing film', () => {});
-
-        it('DELETE a film by id', () => {
-            return request.del(`/films/${filmThree._id}`)
-                .then(res => {
-                    assert.isTrue(res.body.deleted);
+        it('update a flim - add an actor to an existing film', () => {
+            let actorFive = {
+                name: 'Jonny Depp',
+                dob: '1969-10-14T00:00:00.000Z'
+            };
+            return saveResource(actorFive, '/actors')
+                .then(savedActor => {
+                    actorFive = savedActor;
+                })
+                .then(() => {
+                    request.post(`/films/${filmTwo._id}/actors`)
+                        .send(actorFive)
+                        .then(res => {
+                            assert.include(res.body.actors, actorFive._id);
+                        });
                 });
         });
-
     });
 
     describe('tests delete', () => {
@@ -268,7 +271,6 @@ describe('test data for project', () => {
         };
 
         it('deletes saved actor not in Film', () => {
-
             return saveResource(actorFour, '/actors')
                 .then(savedActor => {
                     actorFour = savedActor;
@@ -289,14 +291,7 @@ describe('test data for project', () => {
                         assert.equal(res.status, 400);
                         assert.equal(res.response.body.error, 'CANNOT REMOVE ACTOR IN FILM');
                     }
-
                 );
-            // OTHER OPTION FOR HANDLING ERROR
-            // .catch((res) => {
-            //         assert.equal(res.status, 400);
-            //         assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
-            //     }
-            // )
         });
 
         it('tries to delete actor with wrong id', () => {
@@ -308,6 +303,13 @@ describe('test data for project', () => {
                         assert.equal(res.response.body.error, 'CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE');
                     }
                 );
+        });
+
+        it('DELETE a film by id', () => {
+            return request.del(`/films/${filmThree._id}`)
+                .then(res => {
+                    assert.isTrue(res.body.deleted);
+                });
         });
     });
 });
