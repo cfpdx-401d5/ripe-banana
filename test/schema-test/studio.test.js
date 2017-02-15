@@ -1,12 +1,12 @@
 const assert = require('chai').assert;
-const Review = require('../../lib/models/review-schema');
+const Studio = require('../../lib/models/studio-schema');
 const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
-describe('review model', () => {
-    it('rating validation returns error for numbers outside of 1-5', () => {
-        return new Review({ rating: 7, review: 'This is a test review.' })
+describe('studio model', () => {
+    it('validation error if studio has no name', () => {
+        return new Studio({ address: { city: 'Lisbon', state: 'TN', country: 'USA' } })
             .validate()
             .then(
                 () => { throw new Error(); },
