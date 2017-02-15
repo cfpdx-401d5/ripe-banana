@@ -130,7 +130,7 @@ describe('test data for project', () => {
                 })
                 .then(res => {
                     assert.deepEqual(res.body.name, actorOne.name);
-            });
+                });
         });
 
     });
@@ -181,8 +181,8 @@ describe('test data for project', () => {
             return request.put(`/studios/${studioOne._id}`)
                 .send(studioOne)
                 .then(res => {
-                    assert.deepEqual(res.body, studioOne)
-                })
+                    assert.deepEqual(res.body, studioOne);
+                });
         });
     });
 
@@ -284,8 +284,8 @@ describe('test data for project', () => {
                     return request.del(`/actors/${actorFour._id}`);
                 })
                 .then(res => {
-                    assert.isTrue(res.body.deleted)
-                })
+                    assert.isTrue(res.body.deleted);
+                });
         });
 
         it('tries to delete actor in Film', () => {
@@ -294,10 +294,10 @@ describe('test data for project', () => {
                     () => { throw new Error('successful response not expected');},
                     (res) => {
                         assert.equal(res.status, 400);
-                        assert.equal(res.response.body.error, `CANNOT REMOVE ACTOR IN FILM`);
+                        assert.equal(res.response.body.error, 'CANNOT REMOVE ACTOR IN FILM');
                     }
     
-                )
+                );
                 // OTHER OPTION FOR HANDLING ERROR
                 // .catch((res) => {
                 //         assert.equal(res.status, 400);
@@ -307,14 +307,14 @@ describe('test data for project', () => {
         });
 
         it('tries to delete actor with wrong id', () => {
-            return request.del(`/actors/58a36a64c9fd0e3630d3e3c1`)
+            return request.del('/actors/58a36a64c9fd0e3630d3e3c1')
                 .then(
                     () => { throw new Error('successful response not expected');},
                     res => {
                         assert.equal(res.status, 404);
-                        assert.equal(res.response.body.error, `CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE`)
+                        assert.equal(res.response.body.error, 'CANNOT FIND ID 58a36a64c9fd0e3630d3e3c1 TO REMOVE');
                     }
-                )
+                );
         });
 
         it('deletes studio not tied to film', () => {
@@ -329,35 +329,35 @@ describe('test data for project', () => {
 
             return saveResource(studioToDelete, '/studios')
                 .then(savedStudio => {
-                    studioToDelete = savedStudio
+                    studioToDelete = savedStudio;
                 })
                 .then(() => {
-                    return request.del(`/studios/${studioToDelete._id}`)
+                    return request.del(`/studios/${studioToDelete._id}`);
                 }).then(res => {
-                    assert.isTrue(res.body.deleted)
-                })
+                    assert.isTrue(res.body.deleted);
+                });
         });
 
         it.skip('throws err if tries to delete studio with wrong id', () => {
-            return request.del(`/studios/58a3b4c8cc438c5441b0f173`)
+            return request.del('/studios/58a3b4c8cc438c5441b0f173')
                 .then(
-                    () => { throw new Error('successful response not expected')},
+                    () => { throw new Error('successful response not expected');},
                     res => {
                         assert.equal(res.status, 404);
                         assert.equal(res.response.body.error, 'CANNOT FIND ID 58a3b4c8cc438c5441b0f173 TO REMOVE');
                     }
-                )
+                );
         });
 
         it('throws err if tries to delete studio in film', () => {
             return request.del(`/studios/${studioOne._id}`)
                 .then(
-                    () => { throw new Error('successful response not expected')},
+                    () => { throw new Error('successful response not expected');},
                     res => {
                         assert.equal(res.status, 400);
                         assert.equal(res.response.body.error, 'CANNOT REMOVE STUDIO OF SAVED FILM');
                     }
-                )
+                );
         });
     });
 });
