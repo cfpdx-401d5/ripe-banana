@@ -236,6 +236,8 @@ describe('test data for project', () => {
                 });
         });
 
+        it('update a flim - add an actor to an existing film', () => {});
+
         it('DELETE a film by id', () => {
             return request.del(`/films/${filmThree._id}`)
                 .then(res => {
